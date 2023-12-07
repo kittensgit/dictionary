@@ -1,115 +1,84 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
-import {
-    Backdrop,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Container,
-    Divider,
-    IconButton,
-    Modal,
-    TextField,
-    Typography,
-} from '@mui/material';
 
-import { styled } from '@mui/system';
+import ModalCard from './Components/ModalCard';
 
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Container, Typography } from '@mui/material';
 
-const NonSelectableTypography = styled(Typography)`
-    user-select: none;
-`;
-
-const TextContainer: React.FC = () => {
+const App: React.FC = () => {
     const [currentWord, setCurrentWord] = useState<string | null>(null);
+    const [translatedText, setTranslatedText] = useState('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
+
     const handleDoubleClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>
     ) => {
         if ((event.target as HTMLElement).tagName === 'SPAN') {
             const word = (event.target as HTMLElement).textContent;
-            setCurrentWord(word);
-            handleOpen();
+            if (word !== null) {
+                translateText(word);
+                setCurrentWord(word);
+                handleOpen();
+            }
         }
     };
 
     const text =
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid temporibus ab suscipit ipsa harum voluptas incidunt modi atque labore similique officiis inventore quasi, dolor quo consequatur quibusdam ratione voluptatum optio?';
+        'Lucas goes to school every day of the week. He has many subjects to go to each school day: English, art, science, mathematics, gym, and history. His mother packs a big backpack full of books and lunch for Lucas.    His first class is English, and he likes that teacher very much. His English teacher says that he is a good pupil, which Lucas knows means that she thinks he is a good student.';
     const words = text.split(' ');
+
+    const translateText = async (textToTranslate: string) => {
+        setIsLoading(true);
+        const sourceLanguage = 'auto'; // 'auto' означает автоматическое определение языка
+        const targetLanguage = 'ru'; // Например, 'ru' для русского
+
+        try {
+            const response = await axios.post(
+                'https://libretranslate.de/translate',
+                {
+                    q: textToTranslate,
+                    source: sourceLanguage,
+                    target: targetLanguage,
+                }
+            );
+
+            const translatedText = response.data.translatedText;
+            setTranslatedText(translatedText);
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error');
+        }
+    };
 
     return (
         <Box>
             <Container>
-                <Modal
-                    open={isOpen}
-                    onClose={handleClose}
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Card>
-                        <CardContent
-                            sx={{ position: 'relative', padding: '60px' }}
-                        >
-                            <IconButton
-                                onClick={handleClose}
-                                sx={{
-                                    position: 'absolute',
-                                    top: '0',
-                                    right: '0',
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-
-                            <Typography variant="h4">
-                                Add word to the dictionary
-                            </Typography>
-                            <Container
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: '20px',
-                                    marginTop: 3,
-                                }}
-                            >
-                                <Box sx={{ display: 'flex', gap: '20px' }}>
-                                    <TextField
-                                        label="Word"
-                                        variant="standard"
-                                        value={currentWord}
-                                    />
-
-                                    <TextField
-                                        label="Translate"
-                                        variant="standard"
-                                    />
-                                </Box>
-                                <Box>
-                                    <Button variant="contained">Save</Button>
-                                </Box>
-                            </Container>
-                        </CardContent>
-                    </Card>
-                </Modal>
+                <ModalCard
+                    isOpen={isOpen}
+                    isLoading={isLoading}
+                    currentWord={currentWord}
+                    translatedText={translatedText}
+                    handleClose={handleClose}
+                />
                 <Typography variant="h1" textAlign={'center'}>
                     Dictionary
                 </Typography>
-                <NonSelectableTypography onDoubleClick={handleDoubleClick}>
+                <Typography
+                    sx={{ userSelect: 'none' }}
+                    onDoubleClick={handleDoubleClick}
+                >
                     {words.map((word, index) => (
                         <span key={index}>{word} </span>
                     ))}
-                </NonSelectableTypography>
+                </Typography>
             </Container>
         </Box>
     );
 };
 
-export default TextContainer;
+export default App;
