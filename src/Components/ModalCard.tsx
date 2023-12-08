@@ -16,6 +16,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalCardProps {
+    error: string | unknown;
     isOpen: boolean;
     currentWord: string | null;
     translatedText: string;
@@ -28,8 +29,13 @@ const ModalCard: React.FC<ModalCardProps> = ({
     currentWord,
     translatedText,
     isLoading,
+    error,
     handleClose,
 }) => {
+    const handleSave = () => {
+        handleClose();
+    };
+
     return (
         <Modal
             open={isOpen}
@@ -65,7 +71,9 @@ const ModalCard: React.FC<ModalCardProps> = ({
                             marginTop: 3,
                         }}
                     >
-                        {isLoading ? (
+                        {error ? (
+                            <div>Error</div>
+                        ) : isLoading ? (
                             <CircularProgress />
                         ) : (
                             <Box sx={{ display: 'flex', gap: '20px' }}>
@@ -83,7 +91,9 @@ const ModalCard: React.FC<ModalCardProps> = ({
                         )}
 
                         <Box>
-                            <Button variant="contained">Save</Button>
+                            <Button onClick={handleSave} variant="contained">
+                                Save
+                            </Button>
                         </Box>
                     </Container>
                 </CardContent>

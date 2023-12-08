@@ -5,12 +5,14 @@ import './App.css';
 import ModalCard from './Components/ModalCard';
 
 import { Box, Container, Typography } from '@mui/material';
+import WordsList from './Components/WordsList';
 
 const App: React.FC = () => {
     const [currentWord, setCurrentWord] = useState<string | null>(null);
     const [translatedText, setTranslatedText] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [error, setError] = useState<string | unknown>('');
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
@@ -27,10 +29,6 @@ const App: React.FC = () => {
             }
         }
     };
-
-    const text =
-        'Lucas goes to school every day of the week. He has many subjects to go to each school day: English, art, science, mathematics, gym, and history. His mother packs a big backpack full of books and lunch for Lucas.    His first class is English, and he likes that teacher very much. His English teacher says that he is a good pupil, which Lucas knows means that she thinks he is a good student.';
-    const words = text.split(' ');
 
     const translateText = async (textToTranslate: string) => {
         setIsLoading(true);
@@ -49,33 +47,42 @@ const App: React.FC = () => {
 
             const translatedText = response.data.translatedText;
             setTranslatedText(translatedText);
-            setIsLoading(false);
         } catch (error) {
-            console.error('Error');
+            setError(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const text =
+        'Lucas goes to school every day of the week. He has many subjects to go to each school day: English, art, science, mathematics, gym, and history. His mother packs a big backpack full of books and lunch for Lucas.    His first class is English, and he likes that teacher very much. His English teacher says that he is a good pupil, which Lucas knows means that she thinks he is a good student.';
+    const words = text.split(' ');
+
     return (
         <Box>
-            <Container>
+            <Container sx={{ display: 'flex' }}>
                 <ModalCard
+                    error={error}
                     isOpen={isOpen}
                     isLoading={isLoading}
                     currentWord={currentWord}
                     translatedText={translatedText}
                     handleClose={handleClose}
                 />
-                <Typography variant="h1" textAlign={'center'}>
-                    Dictionary
-                </Typography>
-                <Typography
-                    sx={{ userSelect: 'none' }}
-                    onDoubleClick={handleDoubleClick}
-                >
-                    {words.map((word, index) => (
-                        <span key={index}>{word} </span>
-                    ))}
-                </Typography>
+                <Box>
+                    <Typography variant="h1" textAlign={'center'}>
+                        Dictionary
+                    </Typography>
+                    <Typography
+                        sx={{ userSelect: 'none' }}
+                        onDoubleClick={handleDoubleClick}
+                    >
+                        {words.map((word, index) => (
+                            <span key={index}>{word} </span>
+                        ))}
+                    </Typography>
+                </Box>
+                <WordsList />
             </Container>
         </Box>
     );
