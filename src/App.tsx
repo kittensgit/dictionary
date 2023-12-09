@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { v4 } from 'uuid';
+
 import './App.css';
+import { Box, Container, Typography } from '@mui/material';
+
+import { IDictionary } from './types/types';
 
 import ModalCard from './Components/ModalCard';
-
-import { Box, Container, Typography } from '@mui/material';
 import WordsList from './Components/WordsList';
 
 const App: React.FC = () => {
@@ -13,6 +16,19 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string | unknown>('');
+    const [dictionary, setDictionary] = useState<IDictionary[]>([]);
+
+    const saveWordToDict = (
+        word: IDictionary['word'],
+        translate: IDictionary['translate']
+    ) => {
+        const newDictWord: IDictionary = {
+            id: v4(),
+            translate,
+            word,
+        };
+        setDictionary([...dictionary, newDictWord]);
+    };
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
@@ -68,6 +84,7 @@ const App: React.FC = () => {
                     currentWord={currentWord}
                     translatedText={translatedText}
                     handleClose={handleClose}
+                    saveWordToDict={saveWordToDict}
                 />
                 <Box>
                     <Typography variant="h1" textAlign={'center'}>
@@ -82,7 +99,7 @@ const App: React.FC = () => {
                         ))}
                     </Typography>
                 </Box>
-                <WordsList />
+                <WordsList dictionary={dictionary} />
             </Container>
         </Box>
     );

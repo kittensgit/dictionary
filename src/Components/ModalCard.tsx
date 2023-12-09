@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
+import { IDictionary } from '../types/types';
 
 interface ModalCardProps {
     error: string | unknown;
@@ -21,6 +22,10 @@ interface ModalCardProps {
     currentWord: string | null;
     translatedText: string;
     isLoading: boolean;
+    saveWordToDict: (
+        word: IDictionary['word'],
+        translate: IDictionary['translate']
+    ) => void;
     handleClose: () => void;
 }
 
@@ -31,8 +36,12 @@ const ModalCard: React.FC<ModalCardProps> = ({
     isLoading,
     error,
     handleClose,
+    saveWordToDict,
 }) => {
     const handleSave = () => {
+        if (currentWord) {
+            saveWordToDict(currentWord, translatedText);
+        }
         handleClose();
     };
 

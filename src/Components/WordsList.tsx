@@ -8,10 +8,13 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { IDictionary } from '../types/types';
 
-interface WordsListProps {}
+interface WordsListProps {
+    dictionary: IDictionary[];
+}
 
-const WordsList: FC<WordsListProps> = () => {
+const WordsList: FC<WordsListProps> = ({ dictionary }) => {
     return (
         <Box>
             <Typography variant="h4" textAlign={'center'}>
@@ -26,26 +29,16 @@ const WordsList: FC<WordsListProps> = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <TableRow>
-                            <TableCell align="center">Hi</TableCell>
-                            <TableCell align="center">Привет</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="center">Hi</TableCell>
-                            <TableCell align="center">Привет</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="center">Hi</TableCell>
-                            <TableCell align="center">Привет</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="center">Hi</TableCell>
-                            <TableCell align="center">Привет</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell align="center">Hi</TableCell>
-                            <TableCell align="center">Привет</TableCell>
-                        </TableRow>
+                        {dictionary.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell align="center">
+                                    {item.word}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {item.translate}
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
