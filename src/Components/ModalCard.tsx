@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { IDictionary } from '../types/types';
+
 import {
     Box,
     Button,
@@ -12,9 +14,7 @@ import {
     Typography,
     CircularProgress,
 } from '@mui/material';
-
 import CloseIcon from '@mui/icons-material/Close';
-import { IDictionary } from '../types/types';
 
 interface ModalCardProps {
     error: string | unknown;

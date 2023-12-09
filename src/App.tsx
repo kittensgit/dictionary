@@ -11,12 +11,12 @@ import ModalCard from './Components/ModalCard';
 import WordsList from './Components/WordsList';
 
 const App: React.FC = () => {
+    const [dictionary, setDictionary] = useState<IDictionary[]>([]);
     const [currentWord, setCurrentWord] = useState<string | null>(null);
     const [translatedText, setTranslatedText] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string | unknown>('');
-    const [dictionary, setDictionary] = useState<IDictionary[]>([]);
 
     const saveWordToDict = (
         word: IDictionary['word'],
@@ -28,6 +28,10 @@ const App: React.FC = () => {
             word,
         };
         setDictionary([...dictionary, newDictWord]);
+    };
+
+    const deleteWordFromDict = (id: IDictionary['id']) => {
+        setDictionary(dictionary.filter((item) => item.id !== id));
     };
 
     const handleOpen = () => setIsOpen(true);
@@ -99,7 +103,10 @@ const App: React.FC = () => {
                         ))}
                     </Typography>
                 </Box>
-                <WordsList dictionary={dictionary} />
+                <WordsList
+                    dictionary={dictionary}
+                    deleteWordFromDict={deleteWordFromDict}
+                />
             </Container>
         </Box>
     );
