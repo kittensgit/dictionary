@@ -9,13 +9,17 @@ import { IDictionary } from './types/types';
 
 import ModalCard from './Components/ModalCard';
 import WordsList from './Components/WordsList';
+import EditModal from './Components/EditModal';
 
 const App: React.FC = () => {
     const [dictionary, setDictionary] = useState<IDictionary[]>([]);
-    const [currentWord, setCurrentWord] = useState<string | null>(null);
+    const [currentWord, setCurrentWord] = useState<string>('');
     const [translatedText, setTranslatedText] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [editWord, setEditWord] = useState<IDictionary['word']>('');
+    const [editTranslate, setEditTranslate] = useState<IDictionary['word']>('');
     const [error, setError] = useState<string | unknown>('');
 
     const saveWordToDict = (
@@ -36,6 +40,19 @@ const App: React.FC = () => {
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
+
+    const handleOpenEdit = (id: IDictionary['id']) => {
+        if (dictionary) {
+            const editItem = dictionary.find((item) => item.id === id);
+            if (editItem) {
+                setEditWord(editItem.word);
+                setEditTranslate(editItem.translate);
+            }
+            console.log(editWord);
+        }
+        setIsEdit(true);
+    };
+    const handleCloseEdit = () => setIsEdit(false);
 
     const handleDoubleClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -90,9 +107,24 @@ const App: React.FC = () => {
                     handleClose={handleClose}
                     saveWordToDict={saveWordToDict}
                 />
+                <EditModal
+                    handleCloseEdit={handleCloseEdit}
+                    isEdit={isEdit}
+                    translate={translatedText}
+                    word={currentWord}
+                />
                 <Box>
                     <Typography variant="h1" textAlign={'center'}>
                         Dictionary
+                    </Typography>
+                    <Typography
+                        color={'#9e9e9e'}
+                        fontStyle={'italic'}
+                        textAlign={'center'}
+                        marginBottom={3}
+                    >
+                        *Double click on the word and it will appear in the
+                        table
                     </Typography>
                     <Typography
                         sx={{ userSelect: 'none' }}
@@ -106,6 +138,7 @@ const App: React.FC = () => {
                 <WordsList
                     dictionary={dictionary}
                     deleteWordFromDict={deleteWordFromDict}
+                    handleOpenEdit={handleOpenEdit}
                 />
             </Container>
         </Box>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { IDictionary } from '../types/types';
 
@@ -19,7 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 interface ModalCardProps {
     error: string | unknown;
     isOpen: boolean;
-    currentWord: string | null;
+    currentWord: string;
     translatedText: string;
     isLoading: boolean;
     saveWordToDict: (
@@ -38,11 +38,25 @@ const ModalCard: React.FC<ModalCardProps> = ({
     handleClose,
     saveWordToDict,
 }) => {
+    const [wordValue, setWordValue] = useState<string>(currentWord);
+    const [translateValue, setTranslateValue] =
+        useState<string>(translatedText);
+
+    useEffect(() => {
+        setWordValue(currentWord);
+        setTranslateValue(translatedText);
+    }, [currentWord, translatedText]);
+
     const handleSave = () => {
-        if (currentWord) {
-            saveWordToDict(currentWord, translatedText);
-        }
+        saveWordToDict(wordValue, translateValue);
         handleClose();
+    };
+
+    const handleWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setWordValue(e.target.value);
+    };
+    const handleTranslateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTranslateValue(e.target.value);
     };
 
     return (
@@ -89,12 +103,14 @@ const ModalCard: React.FC<ModalCardProps> = ({
                                 <TextField
                                     label="Word"
                                     variant="standard"
-                                    value={currentWord}
+                                    value={wordValue}
+                                    onChange={handleWordChange}
                                 />
                                 <TextField
                                     label="Translate"
                                     variant="standard"
-                                    value={translatedText}
+                                    value={translateValue}
+                                    onChange={handleTranslateChange}
                                 />
                             </Box>
                         )}

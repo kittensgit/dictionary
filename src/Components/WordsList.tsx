@@ -10,16 +10,25 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface WordsListProps {
     dictionary: IDictionary[];
     deleteWordFromDict: (id: IDictionary['id']) => void;
+    handleOpenEdit: (id: IDictionary['id']) => void;
 }
 
-const WordsList: FC<WordsListProps> = ({ dictionary, deleteWordFromDict }) => {
+const WordsList: FC<WordsListProps> = ({
+    dictionary,
+    deleteWordFromDict,
+    handleOpenEdit,
+}) => {
+    const toggleEdit = (id: IDictionary['id']) => {
+        handleOpenEdit(id);
+    };
     return (
-        <Box>
-            <Typography variant="h4" textAlign={'center'}>
+        <Box minWidth={'400px'}>
+            <Typography variant="h2" textAlign={'center'}>
                 Words
             </Typography>
             <TableContainer>
@@ -41,8 +50,18 @@ const WordsList: FC<WordsListProps> = ({ dictionary, deleteWordFromDict }) => {
                                     {item.translate}
                                 </TableCell>
                                 <TableCell align="center">
+                                    <EditIcon
+                                        sx={{
+                                            cursor: 'pointer',
+                                            marginRight: 1,
+                                        }}
+                                        fontSize="small"
+                                        onClick={() => toggleEdit(item.id)}
+                                    />
                                     <ClearIcon
-                                        sx={{ cursor: 'pointer' }}
+                                        sx={{
+                                            cursor: 'pointer',
+                                        }}
                                         fontSize="small"
                                         onClick={() =>
                                             deleteWordFromDict(item.id)
