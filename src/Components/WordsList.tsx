@@ -9,23 +9,23 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import ClearIcon from '@mui/icons-material/Clear';
-import EditIcon from '@mui/icons-material/Edit';
+import WordItem from './WordItem';
 
 interface WordsListProps {
     dictionary: IDictionary[];
     deleteWordFromDict: (id: IDictionary['id']) => void;
-    handleOpenEdit: (id: IDictionary['id']) => void;
+    updateDictItem: (
+        id: IDictionary['id'],
+        word: IDictionary['word'],
+        translate: IDictionary['translate']
+    ) => void;
 }
 
 const WordsList: FC<WordsListProps> = ({
     dictionary,
     deleteWordFromDict,
-    handleOpenEdit,
+    updateDictItem,
 }) => {
-    const toggleEdit = (id: IDictionary['id']) => {
-        handleOpenEdit(id);
-    };
     return (
         <Box minWidth={'400px'}>
             <Typography variant="h2" textAlign={'center'}>
@@ -42,33 +42,12 @@ const WordsList: FC<WordsListProps> = ({
                     </TableHead>
                     <TableBody>
                         {dictionary.map((item) => (
-                            <TableRow key={item.id}>
-                                <TableCell align="center">
-                                    {item.word}
-                                </TableCell>
-                                <TableCell align="center">
-                                    {item.translate}
-                                </TableCell>
-                                <TableCell align="center">
-                                    <EditIcon
-                                        sx={{
-                                            cursor: 'pointer',
-                                            marginRight: 1,
-                                        }}
-                                        fontSize="small"
-                                        onClick={() => toggleEdit(item.id)}
-                                    />
-                                    <ClearIcon
-                                        sx={{
-                                            cursor: 'pointer',
-                                        }}
-                                        fontSize="small"
-                                        onClick={() =>
-                                            deleteWordFromDict(item.id)
-                                        }
-                                    />
-                                </TableCell>
-                            </TableRow>
+                            <WordItem
+                                key={item.id}
+                                item={item}
+                                deleteWordFromDict={deleteWordFromDict}
+                                updateDictItem={updateDictItem}
+                            />
                         ))}
                     </TableBody>
                 </Table>

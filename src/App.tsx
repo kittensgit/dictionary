@@ -9,7 +9,6 @@ import { IDictionary } from './types/types';
 
 import ModalCard from './Components/ModalCard';
 import WordsList from './Components/WordsList';
-import EditModal from './Components/EditModal';
 
 const App: React.FC = () => {
     const [dictionary, setDictionary] = useState<IDictionary[]>([]);
@@ -17,9 +16,6 @@ const App: React.FC = () => {
     const [translatedText, setTranslatedText] = useState('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [isEdit, setIsEdit] = useState<boolean>(false);
-    const [editWord, setEditWord] = useState<IDictionary['word']>('');
-    const [editTranslate, setEditTranslate] = useState<IDictionary['word']>('');
     const [error, setError] = useState<string | unknown>('');
 
     const saveWordToDict = (
@@ -38,21 +34,27 @@ const App: React.FC = () => {
         setDictionary(dictionary.filter((item) => item.id !== id));
     };
 
+    const updateDictItem = (
+        id: IDictionary['id'],
+        word: IDictionary['word'],
+        translate: IDictionary['translate']
+    ) => {
+        setDictionary(
+            dictionary.map((item) =>
+                item.id === id
+                    ? {
+                          ...item,
+                          word,
+                          translate,
+                      }
+                    : item
+            )
+        );
+        console.log(dictionary);
+    };
+
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
-
-    const handleOpenEdit = (id: IDictionary['id']) => {
-        if (dictionary) {
-            const editItem = dictionary.find((item) => item.id === id);
-            if (editItem) {
-                setEditWord(editItem.word);
-                setEditTranslate(editItem.translate);
-            }
-            console.log(editWord);
-        }
-        setIsEdit(true);
-    };
-    const handleCloseEdit = () => setIsEdit(false);
 
     const handleDoubleClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -107,12 +109,7 @@ const App: React.FC = () => {
                     handleClose={handleClose}
                     saveWordToDict={saveWordToDict}
                 />
-                <EditModal
-                    handleCloseEdit={handleCloseEdit}
-                    isEdit={isEdit}
-                    translate={translatedText}
-                    word={currentWord}
-                />
+
                 <Box>
                     <Typography variant="h1" textAlign={'center'}>
                         Dictionary
@@ -138,7 +135,7 @@ const App: React.FC = () => {
                 <WordsList
                     dictionary={dictionary}
                     deleteWordFromDict={deleteWordFromDict}
-                    handleOpenEdit={handleOpenEdit}
+                    updateDictItem={updateDictItem}
                 />
             </Container>
         </Box>
