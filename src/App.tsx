@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { v4 } from 'uuid';
 
 import './App.css';
-import { Box, Container, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Typography,
+} from '@mui/material';
 
 import { IDictionary } from './types/types';
 
@@ -11,6 +17,9 @@ import ModalCard from './Components/ModalCard';
 import WordsList from './Components/WordsList';
 
 const App: React.FC = () => {
+    const [text, setText] = useState<string>('');
+    const [isTextLoading, setIsTextLoading] = useState<boolean>(false);
+
     const [dictionary, setDictionary] = useState<IDictionary[]>([]);
     const [currentWord, setCurrentWord] = useState<string>('');
     const [translatedText, setTranslatedText] = useState('');
@@ -71,8 +80,8 @@ const App: React.FC = () => {
 
     const translateText = async (textToTranslate: string) => {
         setIsLoading(true);
-        const sourceLanguage = 'auto'; // 'auto' означает автоматическое определение языка
-        const targetLanguage = 'ru'; // Например, 'ru' для русского
+        const sourceLanguage = 'en';
+        const targetLanguage = 'ru';
 
         try {
             const response = await axios.post(
@@ -93,12 +102,29 @@ const App: React.FC = () => {
         }
     };
 
-    const text =
-        'Lucas goes to school every day of the week. He has many subjects to go to each school day: English, art, science, mathematics, gym, and history. His mother packs a big backpack full of books and lunch for Lucas.    His first class is English, and he likes that teacher very much. His English teacher says that he is a good pupil, which Lucas knows means that she thinks he is a good student.';
+    const getRandomBaconText = async () => {
+        setIsTextLoading(true);
+        try {
+            const response = await axios.get(
+                'https://baconipsum.com/api/?type=all-meat&sentences=10'
+            );
+            const baconText = response.data[0];
+            setText(baconText);
+        } catch (error) {
+            console.error('Error fetching bacon text:', error);
+        } finally {
+            setIsTextLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getRandomBaconText();
+    }, []);
+
     const words = text.split(' ');
 
     return (
-        <Box>
+        <Box className="App">
             <Container sx={{ display: 'flex' }}>
                 <ModalCard
                     error={error}
@@ -123,14 +149,33 @@ const App: React.FC = () => {
                         *Double click on the word and it will appear in the
                         table
                     </Typography>
-                    <Typography
-                        sx={{ userSelect: 'none' }}
-                        onDoubleClick={handleDoubleClick}
-                    >
-                        {words.map((word, index) => (
-                            <span key={index}>{word} </span>
-                        ))}
-                    </Typography>
+                    <Box display={'flex'} flexDirection={'column'}>
+                        {isTextLoading ? (
+                            <CircularProgress sx={{ alignSelf: 'center' }} />
+                        ) : (
+                            <>
+                                <Typography
+                                    sx={{ userSelect: 'none' }}
+                                    onDoubleClick={handleDoubleClick}
+                                >
+                                    {words.map((word, index) => (
+                                        <span key={index}>{word} </span>
+                                    ))}
+                                </Typography>
+                                <Button
+                                    sx={{
+                                        alignSelf: 'center',
+                                        marginTop: 2,
+                                        backgroundColor: '#d26019',
+                                    }}
+                                    variant="contained"
+                                    onClick={() => getRandomBaconText()}
+                                >
+                                    Generate new text
+                                </Button>
+                            </>
+                        )}
+                    </Box>
                 </Box>
                 <WordsList
                     dictionary={dictionary}

@@ -4,3 +4,15 @@ body {
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+
+.App {
+    background-image: url('./image/bg.jpg');
+    background-size: cover; /* Растягивает изображение, чтобы покрыть весь элемент */
+    background-position: center; /* Выравнивает изображение по центру */
+    background-repeat: no-repeat; /* Отключает повторение изображения */
+
+    height: 100vh;
+    margin: 0;
+
+    color: #80490a;
+}
