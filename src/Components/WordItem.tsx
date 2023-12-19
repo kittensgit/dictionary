@@ -1,7 +1,8 @@
 import React, { FC, useState } from 'react';
-import { IDictionary } from '../types/types';
-import { TableCell, TableRow, TextField } from '@mui/material';
 
+import { IDictionary } from '../types/types';
+
+import { TableCell, TableRow, TextField } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
@@ -57,7 +58,9 @@ const WordItem: FC<WordItemProps> = ({
                     />
                 </TableCell>
             ) : (
-                <TableCell align="center">{item.word}</TableCell>
+                <TableCell align="center" sx={{ color: 'white' }}>
+                    {item.word}
+                </TableCell>
             )}
             {isEdit ? (
                 <TableCell align="center">
@@ -70,7 +73,9 @@ const WordItem: FC<WordItemProps> = ({
                     />
                 </TableCell>
             ) : (
-                <TableCell align="center">{item.translate}</TableCell>
+                <TableCell align="center" sx={{ color: 'white' }}>
+                    {item.translate}
+                </TableCell>
             )}
 
             <TableCell align="center">
@@ -79,6 +84,7 @@ const WordItem: FC<WordItemProps> = ({
                         fontSize="small"
                         sx={{
                             cursor: 'pointer',
+                            color: 'white',
                         }}
                         onClick={() => {
                             handleUpdate(item.id, editWord, editTranslate);
@@ -90,6 +96,7 @@ const WordItem: FC<WordItemProps> = ({
                             sx={{
                                 cursor: 'pointer',
                                 marginRight: 1,
+                                color: 'white',
                             }}
                             fontSize="small"
                             onClick={() => setIsEdit(true)}
@@ -97,6 +104,7 @@ const WordItem: FC<WordItemProps> = ({
                         <ClearIcon
                             sx={{
                                 cursor: 'pointer',
+                                color: 'white',
                             }}
                             fontSize="small"
                             onClick={() => deleteWordFromDict(item.id)}

@@ -27,17 +27,33 @@ const WordsList: FC<WordsListProps> = ({
     updateDictItem,
 }) => {
     return (
-        <Box minWidth={'400px'}>
-            <Typography variant="h2" textAlign={'center'}>
+        <Box
+            sx={{
+                background: '#333',
+                marginTop: 2,
+                borderRadius: '15px',
+                padding: '20px',
+                marginLeft: '10px',
+            }}
+        >
+            <Typography variant="h2" textAlign={'center'} fontWeight={'500'}>
                 Words
             </Typography>
             <TableContainer>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center">Word</TableCell>
-                            <TableCell align="center">Translate</TableCell>
-                            <TableCell align="center"></TableCell>
+                            <TableCell align="center" sx={{ color: '#fff' }}>
+                                Word
+                            </TableCell>
+                            <TableCell align="center" sx={{ color: '#fff' }}>
+                                Translate
+                            </TableCell>
+                            {dictionary.length ? (
+                                <TableCell align="center"></TableCell>
+                            ) : (
+                                <></>
+                            )}
                         </TableRow>
                     </TableHead>
                     <TableBody>

@@ -3,13 +3,7 @@ import axios from 'axios';
 import { v4 } from 'uuid';
 
 import './App.css';
-import {
-    Box,
-    Button,
-    CircularProgress,
-    Container,
-    Typography,
-} from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
 import { IDictionary } from './types/types';
 
@@ -59,7 +53,6 @@ const App: React.FC = () => {
                     : item
             )
         );
-        console.log(dictionary);
     };
 
     const handleOpen = () => setIsOpen(true);
@@ -124,65 +117,73 @@ const App: React.FC = () => {
     const words = text.split(' ');
 
     return (
-        <Box className="App">
-            <Container sx={{ display: 'flex' }}>
-                <ModalCard
-                    error={error}
-                    isOpen={isOpen}
-                    isLoading={isLoading}
-                    currentWord={currentWord}
-                    translatedText={translatedText}
-                    handleClose={handleClose}
-                    saveWordToDict={saveWordToDict}
-                />
+        <Box
+            sx={{
+                display: 'grid',
+                gridTemplateColumns: '65% 35%',
+                padding: ' 20px 50px',
+            }}
+        >
+            <ModalCard
+                error={error}
+                isOpen={isOpen}
+                isLoading={isLoading}
+                currentWord={currentWord}
+                translatedText={translatedText}
+                handleClose={handleClose}
+                saveWordToDict={saveWordToDict}
+            />
 
-                <Box>
-                    <Typography variant="h1" textAlign={'center'}>
-                        Dictionary
-                    </Typography>
-                    <Typography
-                        color={'#9e9e9e'}
-                        fontStyle={'italic'}
-                        textAlign={'center'}
-                        marginBottom={3}
-                    >
-                        *Double click on the word and it will appear in the
-                        table
-                    </Typography>
-                    <Box display={'flex'} flexDirection={'column'}>
-                        {isTextLoading ? (
-                            <CircularProgress sx={{ alignSelf: 'center' }} />
-                        ) : (
-                            <>
-                                <Typography
-                                    sx={{ userSelect: 'none' }}
-                                    onDoubleClick={handleDoubleClick}
-                                >
-                                    {words.map((word, index) => (
-                                        <span key={index}>{word} </span>
-                                    ))}
-                                </Typography>
-                                <Button
-                                    sx={{
-                                        alignSelf: 'center',
-                                        marginTop: 2,
-                                        backgroundColor: '#d26019',
-                                    }}
-                                    variant="contained"
-                                    onClick={() => getRandomBaconText()}
-                                >
-                                    Generate new text
-                                </Button>
-                            </>
-                        )}
-                    </Box>
+            <Box>
+                <Typography
+                    variant="h1"
+                    textAlign={'center'}
+                    fontWeight={'700'}
+                >
+                    Dictionary
+                </Typography>
+                <Typography
+                    color={'#9e9e9e'}
+                    fontStyle={'italic'}
+                    textAlign={'center'}
+                    marginBottom={3}
+                >
+                    *Double click on the word and it will appear in the table
+                </Typography>
+                <Box display={'flex'} flexDirection={'column'}>
+                    {isTextLoading ? (
+                        <Box alignSelf={'center'}>
+                            <CircularProgress />
+                        </Box>
+                    ) : (
+                        <>
+                            <Typography
+                                sx={{ userSelect: 'none' }}
+                                onDoubleClick={handleDoubleClick}
+                            >
+                                {words.map((word, index) => (
+                                    <span key={index}>{word} </span>
+                                ))}
+                            </Typography>
+                            <Button
+                                sx={{
+                                    alignSelf: 'center',
+                                    marginTop: 2,
+                                }}
+                                variant="contained"
+                                onClick={() => getRandomBaconText()}
+                            >
+                                Generate new text
+                            </Button>
+                        </>
+                    )}
                 </Box>
-                <WordsList
-                    dictionary={dictionary}
-                    deleteWordFromDict={deleteWordFromDict}
-                    updateDictItem={updateDictItem}
-                />
-            </Container>
+            </Box>
+            <WordsList
+                dictionary={dictionary}
+                deleteWordFromDict={deleteWordFromDict}
+                updateDictItem={updateDictItem}
+            />
         </Box>
     );
 };
